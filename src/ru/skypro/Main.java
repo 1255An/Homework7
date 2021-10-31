@@ -1,6 +1,7 @@
 package ru.skypro;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 
 public class Main {
 
@@ -8,9 +9,9 @@ public class Main {
         //task1();
         //task2();
         //task3();
-        task4();
+        // task4();
         //task5();
-        //task6();
+        task6();
     }
 
 
@@ -43,37 +44,33 @@ public class Main {
         String osName = "iOS";
         int clientOS = getClientOS(osName);
         int deviceYear = 2015;
-        //int currentYear = LocalDate.now().getYear();
-        boolean lightNeeded = isLightNeeded(deviceYear);
-        if (clientOS == 1) {
-            if (lightNeeded) {
-                System.out.println("Установите облегченную версию приложения для Android по ссылке");
-            } else {
-                System.out.println("Установите версию приложения для Android по ссылке");
-            }
-        } else if (clientOS == 0) {
-            if (lightNeeded) {
-                System.out.println("Установите облегченную версию приложения для iOS по ссылке");
-            } else {
-                System.out.println("Установите версию приложения для iOS по ссылке");
-            }
-        }
+        printResult(clientOS, deviceYear);
     }
 
+
     private static int getClientOS(String name) {
-        if (name.equals("iOS")) {
-            return 0;
-        } else {
-            return 1;
-        }
+        return name.equals("iOS") ? 0 : 1;
     }
 
     private static boolean isLightNeeded(int deviceYear) {
         int currentYear = LocalDate.now().getYear();
-        if (deviceYear < currentYear) {
-            return true;
+        return (deviceYear < currentYear) ? true : false;
+    }
+
+    private static void printResult(int clientOS, int deviceYear) {
+        boolean lightNeeded = isLightNeeded(deviceYear);
+        StringBuilder sb = new StringBuilder();
+        sb.append("Установите ");
+        if (lightNeeded) {
+            sb.append("облегченную ");
         }
-        return false;
+        sb.append("версию для ");
+        if (clientOS == 0) {
+            sb.append("iOS");
+        } else {
+            sb.append("Android");
+        }
+        System.out.println(sb.toString());
     }
 
 // task3
@@ -102,30 +99,60 @@ public class Main {
 
     private static void isThereDouble(String string) {
         char[] chars = string.toCharArray();
-        boolean found = false;
-        for (int i = 1; i < chars.length; i++) {
-            if (chars[i] == chars[i - 1]) {
-                found = true;
-                System.out.println("В строке есть дубли: " + chars[i]);
-                break;
-            } else if (found) {
-                System.out.println("В строке нет дублей");
+        char prevChar = Character.MAX_VALUE;
+        for (char i : chars) {
+            if (i == prevChar) {
+                System.out.println("Найден дубль в символе " + i);
+                return;
             }
+            prevChar = i;
         }
+        System.out.println("В строке нет дублей");
     }
 
 
     //task5
-    private static void task5 () {
-        int [] arr = {3,2,1,6,5};
-        reverseArr (arr);
+    private static void task5() {
+        int[] arr = {3, 2, 1, 6, 5};
+        reverseArr(arr);
     }
 
-    public static void reverseArr (int [] arr) {
-        for (int i= arr.length-1; i>=0; i--) {
+    public static void reverseArr(int[] arr) {
+        for (int i = arr.length - 1; i >= 0; i--) {
             System.out.print(arr[i]);
         }
     }
 
+    private static void task6() {
+        int[] arr = generateRandomArray();
+        System.out.println("Исходный массив " + Arrays.toString(arr));
+        double avg = findAvgFrom(arr);
+        System.out.println("Среднее значение массива = " + avg);
+    }
 
+    public static int[] generateRandomArray() {
+        java.util.Random random = new java.util.Random();
+        int[] arr = new int[3];
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = random.nextInt(100_000) + 100_000;
+        }
+        return arr;
+    }
+
+    private static int findSum(int[] arr) {
+        int sum = 0;
+        for (int i : arr) {
+            sum += i;
+        }
+        return sum;
+    }
+
+    private static double findAvg(int sum, int elementAmount) {
+        return sum / (double) elementAmount;
+    }
+
+    private static double findAvgFrom(int[] arr) {
+        int sum = findSum(arr);
+        return findAvg(sum, arr.length);
+    }
 }
